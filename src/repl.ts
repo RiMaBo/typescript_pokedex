@@ -4,10 +4,10 @@ export function cleanInput(input: string): string[] {
     return input.toLowerCase().trim().split(" ").filter((word) => word !== "");
 }
 
-export function startREPL(state: State) {
+export async function startREPL(state: State) {
     console.log("Welcome to the Pokedex!");
     state.readline.prompt();
-    state.readline.on("line", (input: string) => {
+    state.readline.on("line", async (input) => {
         const words = cleanInput(input);
         if (words.length) {
             const commandName = words[0];
@@ -15,9 +15,9 @@ export function startREPL(state: State) {
 
             if (command) {
                 try {
-                    command.callback(state);
+                    await command.callback(state);
                 } catch (err) {
-                    console.log(err);
+                    console.log((err as Error).message);
                 }
             } else {
                 console.log(`Unknown command: "${commandName}". Type "help" or a list of commands.`);
