@@ -57,8 +57,32 @@ export class PokeAPI {
                 throw new Error(`An error occurred when fetching location ${locationName}: ${(err as Error).message}`);
             }
         }
+
+        async catchPokemon(pokemonName: string): Promise<Pokemon> {
+            const fullURL = `${PokeAPI.baseURL}/pokemon/${pokemonName}`;
+            const cached = this.cache.get<Pokemon>(fullURL);
+
+            if (cached) {
+                return cached;
+            }
+
+            try {
+                const response = await fetch(fullURL);
+
+                if (!response.ok) {
+                    throw new Error(`${response.status} ${response.statusText}`);
+                }
+
+                const pokemon: Pokemon = await response.json();
+                this.cache.add(fullURL, pokemon);
+                return pokemon;
+            } catch (err) {
+                throw new Error(`An error occurred when catching Pokemon ${pokemonName}: ${(err as Error).message}`);
+            }
+        }
 }
 
+// Created using https://transform.tools/json-to-typescript
 export type ShallowLocations = {
     count: number;
     next: string;
@@ -120,4 +144,310 @@ export type Location = {
             };
         }[];
     }[];
+};
+
+export type Pokemon = {
+    abilities: {
+        ability: {
+            name: string;
+            url: string;
+        };
+        is_hidden: boolean;
+        slot: number;
+    }[];
+    base_experience: number;
+    cries: {
+        latest: string;
+        legacy: string;
+    };
+    forms: {
+        name: string;
+        url: string;
+    }[];
+    game_indices: {
+        game_index: number;
+        version: {
+            name: string;
+            url: string;
+        };
+    }[];
+    height: number;
+    held_items: {
+        item: {
+            name: string;
+            url: string;
+        };
+        version_details: {
+            rarity: number;
+            version: {
+                name: string;
+                url: string;
+            };
+        }[];
+    }[];
+    id: number;
+    is_default: boolean;
+    location_area_encounters: string;
+    moves: {
+        move: {
+            name: string;
+            url: string;
+        };
+        version_group_details: {
+            level_learned_at: number;
+            move_learn_method: {
+                name: string;
+                url: string;
+            };
+            order?: number;
+            version_group: {
+                name: string;
+                url: string;
+            };
+        }[];
+    }[];
+    name: string
+    order: number
+    past_abilities: {
+        abilities: {
+            ability: any;
+            is_hidden: boolean;
+            slot: number;
+        }[];
+        generation: {
+            name: string;
+            url: string;
+        };
+    }[];
+    past_stats: {
+        generation: {
+            name: string;
+            url: string;
+        };
+        stats: {
+            base_stat: number;
+            effort: number;
+            stat: {
+                name: string;
+                url: string;
+            };
+        }[];
+    }[];
+    past_types: any[];
+    species: {
+        name: string;
+        url: string;
+    };
+    sprites: {
+        back_default: string;
+        back_female: string;
+        back_shiny: string;
+        back_shiny_female: string;
+        front_default: string;
+        front_female: string;
+        front_shiny: string;
+        front_shiny_female: string;
+        other: {
+            dream_world: {
+                front_default: string;
+                front_female: any;
+            };
+            home: {
+                front_default: string;
+                front_female: string;
+                front_shiny: string;
+                front_shiny_female: string;
+            };
+            "official-artwork": {
+                front_default: string;
+                front_shiny: string;
+            };
+            showdown: {
+                back_default: string;
+                back_female: string;
+                back_shiny: string;
+                back_shiny_female: any;
+                front_default: string;
+                front_female: string;
+                front_shiny: string;
+                front_shiny_female: string;
+            };
+        };
+        versions: {
+            "generation-i": {
+                "red-blue": {
+                    back_default: string;
+                    back_gray: string;
+                    back_transparent: string;
+                    front_default: string;
+                    front_gray: string;
+                    front_transparent: string;
+                };
+                yellow: {
+                    back_default: string;
+                    back_gray: string;
+                    back_transparent: string;
+                    front_default: string;
+                    front_gray: string;
+                    front_transparent: string;
+                };
+            };
+            "generation-ii": {
+                crystal: {
+                    back_default: string;
+                    back_shiny: string;
+                    back_shiny_transparent: string;
+                    back_transparent: string;
+                    front_default: string;
+                    front_shiny: string;
+                    front_shiny_transparent: string;
+                    front_transparent: string;
+                };
+                gold: {
+                    back_default: string;
+                    back_shiny: string;
+                    front_default: string;
+                    front_shiny: string;
+                    front_transparent: string;
+                };
+                silver: {
+                    back_default: string;
+                    back_shiny: string;
+                    front_default: string;
+                    front_shiny: string;
+                    front_transparent: string;
+                };
+            };
+            "generation-iii": {
+                emerald: {
+                    front_default: string;
+                    front_shiny: string;
+                };
+                "firered-leafgreen": {
+                    back_default: string;
+                    back_shiny: string;
+                    front_default: string;
+                    front_shiny: string;
+                };
+                "ruby-sapphire": {
+                    back_default: string;
+                    back_shiny: string;
+                    front_default: string;
+                    front_shiny: string;
+                };
+            };
+            "generation-iv": {
+                "diamond-pearl": {
+                    back_default: string;
+                    back_female: string;
+                    back_shiny: string;
+                    back_shiny_female: string;
+                    front_default: string;
+                    front_female: string;
+                    front_shiny: string;
+                    front_shiny_female: string;
+                };
+                "heartgold-soulsilver": {
+                    back_default: string;
+                    back_female: string;
+                    back_shiny: string;
+                    back_shiny_female: string;
+                    front_default: string;
+                    front_female: string;
+                    front_shiny: string;
+                    front_shiny_female: string;
+                };
+                platinum: {
+                    back_default: string;
+                    back_female: string;
+                    back_shiny: string;
+                    back_shiny_female: string;
+                    front_default: string;
+                    front_female: string;
+                    front_shiny: string;
+                    front_shiny_female: string;
+                };
+            };
+            "generation-ix": {
+                "scarlet-violet": {
+                    front_default: string;
+                    front_female: any;
+                };
+            };
+            "generation-v": {
+                "black-white": {
+                    animated: {
+                        back_default: string;
+                        back_female: string;
+                        back_shiny: string;
+                        back_shiny_female: string;
+                        front_default: string;
+                        front_female: string;
+                        front_shiny: string;
+                        front_shiny_female: string;
+                    };
+                    back_default: string;
+                    back_female: string;
+                    back_shiny: string;
+                    back_shiny_female: string;
+                    front_default: string;
+                    front_female: string;
+                    front_shiny: string;
+                    front_shiny_female: string;
+                };
+            };
+            "generation-vi": {
+                "omegaruby-alphasapphire": {
+                    front_default: string;
+                    front_female: string;
+                    front_shiny: string;
+                    front_shiny_female: string;
+                };
+                "x-y": {
+                    front_default: string;
+                    front_female: string;
+                    front_shiny: string;
+                    front_shiny_female: string;
+                };
+            };
+            "generation-vii": {
+                icons: {
+                    front_default: string;
+                    front_female: any;
+                };
+                "ultra-sun-ultra-moon": {
+                    front_default: string;
+                    front_female: string;
+                    front_shiny: string;
+                    front_shiny_female: string;
+                };
+            };
+            "generation-viii": {
+                "brilliant-diamond-shining-pearl": {
+                    front_default: string;
+                    front_female: any;
+                };
+                icons: {
+                    front_default: string;
+                    front_female: string;
+                };
+            };
+        };
+    };
+    stats: {
+        base_stat: number;
+        effort: number;
+        stat: {
+            name: string;
+            url: string;
+        };
+    }[];
+    types: {
+        slot: number;
+        type: {
+            name: string;
+            url: string;
+        };
+    }[];
+    weight: number;
 };
